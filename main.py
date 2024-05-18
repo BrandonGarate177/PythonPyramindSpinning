@@ -74,7 +74,7 @@ while True:
     if elapsed_time >= 5:
         Reversed_rotation = not Reversed_rotation
         print(time.time())
-        start_time = time.time()  # Reset start time
+        startTIme = time.time()  # Reset start time
         elapsed_time = time.time() - startTIme
 
     rotation_factor = -1 if Reversed_rotation else 1
