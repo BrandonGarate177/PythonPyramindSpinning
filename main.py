@@ -53,7 +53,7 @@ clock = pygame.time.Clock() #clock so that the animation is even possible
 startTIme = time.time()
 
 #keep track of whether it has been reversed or not 
-Reversed = False
+Reversed_rotation = False
 
 while True: 
     clock.tick(60)
@@ -72,18 +72,19 @@ while True:
     elapsed_time = time.time() - startTIme # this keeps track of how much time has passed  
 
     if elapsed_time >= 5:
-        Reversed = not Reversed
+        Reversed_rotation = not Reversed_rotation
+        print(time.time())
         start_time = time.time()  # Reset start time
+        elapsed_time = time.time() - startTIme
 
-    rotation_factor = -1 if Reversed else 1
+    rotation_factor = -1 if Reversed_rotation else 1
 
-    ### this rotates it on the z axis
     rotation_z = np.matrix([
         [cos(angle* rotation_factor), -sin(angle* rotation_factor), 0],
         [sin(angle * rotation_factor), cos(angle* rotation_factor), 0], 
         [0, 0, 1],
     ])
-    ### this will rotate on the y axis
+        ### this will rotate on the y axis
     rotation_y = np.matrix([
         [cos(angle * rotation_factor), 0, sin(angle* rotation_factor)], 
         [0,1,0],
@@ -96,17 +97,22 @@ while True:
         [0, cos(angle * rotation_factor), sin(angle* rotation_factor)],
     ])
 
+    #if Reversed_rotation == -1: print(elapsed_time)
+    #else: print(elapsed_time)
+    print(elapsed_time)
+
+        
+
+    ### this rotates it on the z axis
+    
+
     angle +=0.01 # so that the camera angle move, hence the math above 
-
-   
-
-
 
     i = 0
     for point in points:
         rotate2d = np.dot(rotation_z, point.reshape((3,1)))
         rotate2d = np.dot(rotation_y, rotate2d)
-        #rotate2d = np.dot(rotation_x, point.reshape((3,1)))
+        rotate2d = np.dot(rotation_x, rotate2d) #was previouslt commented out 
         projected2d = np.dot(projection_matrix, rotate2d)
 
 
