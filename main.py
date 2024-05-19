@@ -17,6 +17,9 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT)) #set mode iss what actually ch
 
 scale = 100
 angle = 0
+
+rotation_speed = 0.01
+
 #scale is how large we are making stuff, and the angle is the angle that we start on facing our shape 
 
 
@@ -57,6 +60,7 @@ Reversed = False
 
 while True: 
     clock.tick(60)
+    # print(startTIme)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -65,53 +69,78 @@ while True:
             if event.key == pygame.K_ESCAPE:
                 pygame.quit()
                 exit()
-
     screen.fill(BLACK)
     #there shall be a whole lot of code inbetween here 
     
     elapsed_time = time.time() - startTIme # this keeps track of how much time has passed  
 
+    # if elapsed_time >= 5:
+    #     Reversed = not Reversed
+    #     startTIme = time.time()  # Reset start time
     if elapsed_time >= 5:
         Reversed = not Reversed
-        start_time = time.time()  # Reset start time
+        startTIme = time.time()  # Reset start time
+        elapsed_time = time.time() - startTIme
+        
 
-    rotation_factor = -1 if Reversed else 1
-
+    # rotation_factor = -1 if Reversed else 1
+    #instead we are changing the angle variable using rotation_speed (a newly defined variable) 
+    if not Reversed:
+        angle += rotation_speed
+        print("Is reversed? ")
+        print(Reversed)
     ### this rotates it on the z axis
-    rotation_z = np.matrix([
-        [cos(angle* rotation_factor), -sin(angle* rotation_factor), 0],
-        [sin(angle * rotation_factor), cos(angle* rotation_factor), 0], 
-        [0, 0, 1],
-    ])
+        rotation_z = np.matrix([
+            [cos(angle), -sin(angle), 0],
+            [sin(angle ), cos(angle), 0], 
+            [0, 0, 1],
+        ])
     ### this will rotate on the y axis
-    rotation_y = np.matrix([
-        [cos(angle * rotation_factor), 0, sin(angle* rotation_factor)], 
-        [0,1,0],
-        [-sin(angle* rotation_factor), 0, cos(angle * rotation_factor)],
-    ])
+        rotation_y = np.matrix([
+            [cos(angle ), 0, sin(angle)], 
+            [0,1,0],
+            [-sin(angle), 0, cos(angle )],
+        ])
     ### this will rotate on the x axis
-    rotation_x = np.matrix([
-        [1, 0, 0], 
-        [0, cos(angle* rotation_factor), -sin(angle * rotation_factor)],
-        [0, cos(angle * rotation_factor), sin(angle* rotation_factor)],
-    ])
+        rotation_x = np.matrix([
+            [1, 0, 0], 
+            [0, cos(angle), -sin(angle)],
+            [0, cos(angle ), sin(angle)],
+        ])
+    else:
+        angle+= -rotation_speed
+        print("Is reversed? ")
+        print(Reversed)
+    ### this rotates it on the z axis
+        rotation_z = np.matrix([
+            [cos(angle), -sin(angle), 0],
+            [sin(angle ), cos(angle), 0], 
+            [0, 0, 1],
+        ])
+    ### this will rotate on the y axis
+        rotation_y = np.matrix([
+            [cos(angle ), 0, sin(angle)], 
+            [0,1,0],
+            [-sin(angle), 0, cos(angle )],
+        ])
+    ### this will rotate on the x axis
+        rotation_x = np.matrix([
+            [1, 0, 0], 
+            [0, cos(angle), -sin(angle)],
+            [0, cos(angle ), sin(angle)],
+        ])
 
-    angle +=0.01 # so that the camera angle move, hence the math above 
-
+    #were eliminating rotation_factor, because what it did was switch the rotation immedietly to negative or positive
+    #the jump was from for example, current position(random number to make my point) 255, once the five seconds have passed
+    #the rotation_factor would turn 255 to -255 which created a jumping effect in the animation 
+    print(elapsed_time)
    
-
-
-
     i = 0
     for point in points:
         rotate2d = np.dot(rotation_z, point.reshape((3,1)))
         rotate2d = np.dot(rotation_y, rotate2d)
         #rotate2d = np.dot(rotation_x, point.reshape((3,1)))
         projected2d = np.dot(projection_matrix, rotate2d)
-
-
-        # x = int(projected2d[0][0] * scale) + circle_pos[0]
-        # y = int(projected2d[1][0] * scale) + circle_pos[1]
 
         x = int(projected2d[0, 0] * scale) + circle_pos[0]
         y = int(projected2d[1, 0] * scale) + circle_pos[1]
