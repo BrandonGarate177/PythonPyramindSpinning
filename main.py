@@ -73,7 +73,7 @@ while True:
 
     if elapsed_time >= 5:
         Reversed = not Reversed
-        start_time = time.time()  # Reset start time
+        startTIme = time.time()  # Reset start time
 
     rotation_factor = -1 if Reversed else 1
 
