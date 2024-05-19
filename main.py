@@ -85,38 +85,55 @@ while True:
 
     # rotation_factor = -1 if Reversed else 1
     #instead we are changing the angle variable using rotation_speed (a newly defined variable) 
-    if Reversed:
+    if not Reversed:
         angle += rotation_speed
+        print("Is reversed? ")
+        print(Reversed)
+    ### this rotates it on the z axis
+        rotation_z = np.matrix([
+            [cos(angle), -sin(angle), 0],
+            [sin(angle ), cos(angle), 0], 
+            [0, 0, 1],
+        ])
+    ### this will rotate on the y axis
+        rotation_y = np.matrix([
+            [cos(angle ), 0, sin(angle)], 
+            [0,1,0],
+            [-sin(angle), 0, cos(angle )],
+        ])
+    ### this will rotate on the x axis
+        rotation_x = np.matrix([
+            [1, 0, 0], 
+            [0, cos(angle), -sin(angle)],
+            [0, cos(angle ), sin(angle)],
+        ])
     else:
         angle+= -rotation_speed
-
+        print("Is reversed? ")
+        print(Reversed)
     ### this rotates it on the z axis
-    rotation_z = np.matrix([
-        [cos(angle), -sin(angle), 0],
-        [sin(angle ), cos(angle), 0], 
-        [0, 0, 1],
-    ])
+        rotation_z = np.matrix([
+            [cos(angle), -sin(angle), 0],
+            [sin(angle ), cos(angle), 0], 
+            [0, 0, 1],
+        ])
     ### this will rotate on the y axis
-    rotation_y = np.matrix([
-        [cos(angle ), 0, sin(angle)], 
-        [0,1,0],
-        [-sin(angle), 0, cos(angle )],
-    ])
+        rotation_y = np.matrix([
+            [cos(angle ), 0, sin(angle)], 
+            [0,1,0],
+            [-sin(angle), 0, cos(angle )],
+        ])
     ### this will rotate on the x axis
-    rotation_x = np.matrix([
-        [1, 0, 0], 
-        [0, cos(angle), -sin(angle)],
-        [0, cos(angle ), sin(angle)],
-    ])
+        rotation_x = np.matrix([
+            [1, 0, 0], 
+            [0, cos(angle), -sin(angle)],
+            [0, cos(angle ), sin(angle)],
+        ])
 
     #were eliminating rotation_factor, because what it did was switch the rotation immedietly to negative or positive
     #the jump was from for example, current position(random number to make my point) 255, once the five seconds have passed
     #the rotation_factor would turn 255 to -255 which created a jumping effect in the animation 
     print(elapsed_time)
-    
-
-    angle +=0.01 # so that the camera angle move, hence the math above 
-
    
     i = 0
     for point in points:
@@ -124,10 +141,6 @@ while True:
         rotate2d = np.dot(rotation_y, rotate2d)
         #rotate2d = np.dot(rotation_x, point.reshape((3,1)))
         projected2d = np.dot(projection_matrix, rotate2d)
-
-
-        # x = int(projected2d[0][0] * scale) + circle_pos[0]
-        # y = int(projected2d[1][0] * scale) + circle_pos[1]
 
         x = int(projected2d[0, 0] * scale) + circle_pos[0]
         y = int(projected2d[1, 0] * scale) + circle_pos[1]
