@@ -60,7 +60,7 @@ Reversed = False
 
 while True: 
     clock.tick(60)
-    print(startTIme)
+    # print(startTIme)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -74,13 +74,21 @@ while True:
     
     elapsed_time = time.time() - startTIme # this keeps track of how much time has passed  
 
+    # if elapsed_time >= 5:
+    #     Reversed = not Reversed
+    #     startTIme = time.time()  # Reset start time
     if elapsed_time >= 5:
         Reversed = not Reversed
         startTIme = time.time()  # Reset start time
+        elapsed_time = time.time() - startTIme
+        
 
     # rotation_factor = -1 if Reversed else 1
     #instead we are changing the angle variable using rotation_speed (a newly defined variable) 
-    angle += rotation_speed if reversed else -rotation_speed
+    if Reversed:
+        angle += rotation_speed
+    else:
+        angle+= -rotation_speed
 
     ### this rotates it on the z axis
     rotation_z = np.matrix([
@@ -104,7 +112,7 @@ while True:
     #were eliminating rotation_factor, because what it did was switch the rotation immedietly to negative or positive
     #the jump was from for example, current position(random number to make my point) 255, once the five seconds have passed
     #the rotation_factor would turn 255 to -255 which created a jumping effect in the animation 
-
+    print(elapsed_time)
     
 
     angle +=0.01 # so that the camera angle move, hence the math above 
