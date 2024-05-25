@@ -46,7 +46,6 @@ projection_matrix = np.matrix([
 projected_points = [
     [n, n] for n in range(len(points))
 ]
-
 def connect_points(i, j, points):
     pygame.draw.line(screen, RED, (points[i][0], points[i][1]), (points[j][0], points[j][1]) )
 
@@ -91,22 +90,23 @@ while True:
         print(Reversed)
     ### this rotates it on the z axis
         rotation_z = np.matrix([
-            [cos(angle), -sin(angle), 0],
-            [sin(angle ), cos(angle), 0], 
-            [0, 0, 1],
-        ])
-    ### this will rotate on the y axis
+                [cos(angle), -sin(angle), 0],
+                [sin(angle ), cos(angle), 0], 
+                [0, 0, 1],
+            ])
+        ### this will rotate on the y axis
         rotation_y = np.matrix([
             [cos(angle ), 0, sin(angle)], 
             [0,1,0],
             [-sin(angle), 0, cos(angle )],
         ])
-    ### this will rotate on the x axis
+        ### this will rotate on the x axis
         rotation_x = np.matrix([
             [1, 0, 0], 
             [0, cos(angle), -sin(angle)],
             [0, cos(angle ), sin(angle)],
         ])
+        
     else:
         angle+= -rotation_speed
         print("Is reversed? ")
